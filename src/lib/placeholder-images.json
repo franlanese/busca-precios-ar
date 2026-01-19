@@ -1,0 +1,46 @@
+{
+  "placeholderImages": [
+    {
+      "id": "smartphone-1",
+      "description": "A modern smartphone with a sleek design",
+      "imageUrl": "https://images.unsplash.com/photo-1754331181006-1f33731f98cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8c21hcnRwaG9uZSUyMGRldmljZXxlbnwwfHx8fDE3Njc2MzU2OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smartphone device"
+    },
+    {
+      "id": "tv-1",
+      "description": "A large 4K television displaying a vibrant landscape",
+      "imageUrl": "https://images.unsplash.com/photo-1478802848783-2ed6e96a0462?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx0ZWxldmlzaW9uJTIwbGl2aW5nJTIwcm9vbXxlbnwwfHx8fDE3Njc1NjExNjV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "television living room"
+    },
+    {
+      "id": "console-1",
+      "description": "A modern video game console with its controller",
+      "imageUrl": "https://images.unsplash.com/photo-1580234797602-22c37b2a6230?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxnYW1lJTIwY29uc29sZXxlbnwwfHx8fDE3Njc2MzU2OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "game console"
+    },
+    {
+      "id": "smartphone-2",
+      "description": "An alternative smartphone model",
+      "imageUrl": "https://images.unsplash.com/photo-1761198879998-6bb91fd6797c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxpcGhvbmUlMjBhbHRlcm5hdGl2ZXxlbnwwfHx8fDE3Njc2MzU2OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "iphone alternative"
+    },
+    {
+      "id": "tv-2",
+      "description": "An OLED television with deep blacks",
+      "imageUrl": "https://images.unsplash.com/photo-1692731974074-03e7ef257a79?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxvbGVkJTIwdHZ8ZW58MHx8fHwxNzY3NjM1Njk1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "oled tv"
+    },
+    {
+      "id": "console-2",
+      "description": "A competing video game console",
+      "imageUrl": "https://images.unsplash.com/photo-1676930959029-82014f21178e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHx4Ym94JTIwY29uc29sZXxlbnwwfHx8fDE3Njc2MzU2OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "xbox console"
+    },
+    {
+      "id": "headphones-1",
+      "description": "Over-ear wireless headphones",
+      "imageUrl": "https://images.unsplash.com/photo-1612465289702-7c84b5258fde?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx3aXJlbGVzcyUyMGhlYWRwaG9uZXN8ZW58MHx8fHwxNzY3NTU0Mzk1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wireless headphones"
+    }
+  ]
+}
