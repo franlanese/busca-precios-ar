@@ -19,10 +19,9 @@ export default function ProductCard({ offer }: ProductCardProps) {
           <img
             src={offer.image}
             alt={offer.title}
-            //fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover"
-            //data-ai-hint={offer.imageHint}
+            className="object-cover w-full h-full"
+          //data-ai-hint={offer.imageHint}
           />
           <div className="absolute top-2 right-2 bg-white/90 dark:bg-black/80 backdrop-blur-sm px-2 py-1 rounded text-xs font-semibold shadow-sm">
             {offer.store}
