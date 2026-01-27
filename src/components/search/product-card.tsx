@@ -23,7 +23,7 @@ export default function ProductCard({ offer }: ProductCardProps) {
             className="object-cover w-full h-full"
           //data-ai-hint={offer.imageHint}
           />
-          <div className="absolute top-2 right-2 bg-white/90 dark:bg-black/80 backdrop-blur-sm px-2 py-1 rounded text-xs font-semibold shadow-sm">
+          <div className="absolute top-2 right-2 bg-black/80 backdrop-blur-sm px-2 py-1 rounded text-xs font-semibold shadow-sm text-white">
             {offer.store}
           </div>
         </div>

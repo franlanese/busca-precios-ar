@@ -10,26 +10,31 @@ import type { ProductCategory, Retailer } from '@/lib/types';
 import { Skeleton } from '../ui/skeleton';
 
 interface FilterSidebarProps {
-  categories: { name: ProductCategory; slug: string }[];
   retailers: Retailer[];
 }
 
-export default function FilterSidebar({ categories, retailers }: FilterSidebarProps) {
+export default function FilterSidebar({ retailers }: FilterSidebarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const handleFilterChange = (type: 'category' | 'retailer' | 'sort', value: string) => {
+  const handleFilterChange = (type: 'retailer' | 'sort', value: string) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
 
-    if (type === 'category') {
-      if (current.get('category') === value) {
-        current.delete('category');
+    if (type === 'retailer') {
+      const stores = current.get('store')?.split(',') || [];
+      if (stores.includes(value)) {
+        const newStores = stores.filter((s) => s !== value);
+        if (newStores.length > 0) {
+          current.set('store', newStores.join(','));
+        } else {
+          current.delete('store');
+        }
       } else {
-        current.set('category', value);
+        stores.push(value);
+        current.set('store', stores.join(','));
       }
     }
 
-    // Placeholder for more complex retailer & sort logic
     if (type === 'sort') {
       current.set('sort', value);
     }
@@ -40,8 +45,8 @@ export default function FilterSidebar({ categories, retailers }: FilterSidebarPr
     router.push(`/search${query}`);
   };
 
-  const selectedCategory = searchParams.get('category');
   const selectedSort = searchParams.get('sort') || 'price-asc';
+  const selectedStores = searchParams.get('store')?.split(',') || [];
 
   return (
     <div className="space-y-6">
@@ -59,33 +64,19 @@ export default function FilterSidebar({ categories, retailers }: FilterSidebarPr
         </Select>
       </div>
 
-      <Accordion type="multiple" defaultValue={['category', 'retailer']} className="w-full">
-        <AccordionItem value="category">
-          <AccordionTrigger className="text-lg font-semibold">Categoría</AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-3">
-              {categories.map((category) => (
-                <div key={category.slug} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`cat-${category.slug}`}
-                    checked={selectedCategory === category.name}
-                    onCheckedChange={() => handleFilterChange('category', category.name)}
-                  />
-                  <Label htmlFor={`cat-${category.slug}`} className="font-normal cursor-pointer">
-                    {category.name}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+      <Accordion type="multiple" defaultValue={['retailer']} className="w-full">
+        {/* Category Filter Removed */}
         <AccordionItem value="retailer">
           <AccordionTrigger className="text-lg font-semibold">Tienda</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-3">
               {retailers.map((retailer) => (
                 <div key={retailer.id} className="flex items-center space-x-2">
-                  <Checkbox id={`ret-${retailer.id}`} />
+                  <Checkbox
+                    id={`ret-${retailer.id}`}
+                    checked={selectedStores.includes(retailer.name)}
+                    onCheckedChange={() => handleFilterChange('retailer', retailer.name)}
+                  />
                   <Label htmlFor={`ret-${retailer.id}`} className="font-normal cursor-pointer">
                     {retailer.name}
                   </Label>
@@ -103,7 +94,7 @@ export default function FilterSidebar({ categories, retailers }: FilterSidebarPr
   );
 }
 
-FilterSidebar.Skeleton = function FilterSidebarSkeleton() {
+export function FilterSidebarSkeleton() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
@@ -118,3 +109,5 @@ FilterSidebar.Skeleton = function FilterSidebarSkeleton() {
     </div>
   )
 }
+
+FilterSidebar.Skeleton = FilterSidebarSkeleton;

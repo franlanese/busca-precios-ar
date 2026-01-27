@@ -1,10 +1,12 @@
 import { Suspense } from 'react';
 import ProductSearchBar from '@/components/product-search-bar';
-import { getCategories, getRetailers, searchProducts } from '@/lib/actions';
-import FilterSidebar from '@/components/search/filter-sidebar';
+import { searchProducts } from '@/lib/actions';
+import FilterSidebar, { FilterSidebarSkeleton } from '@/components/search/filter-sidebar';
 import ProductCard from '@/components/search/product-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
+import type { ProductOfferSearchResult, Retailer } from '@/lib/types';
+import { stores } from '@/lib/stores';
 
 export const revalidate = 0; // No caching for search results
 
@@ -16,6 +18,10 @@ export default function SearchPage({
   const query = typeof searchParams?.q === 'string' ? searchParams.q : '';
   const category = typeof searchParams?.category === 'string' ? searchParams.category : undefined;
   const sort = typeof searchParams?.sort === 'string' ? searchParams.sort : 'price-asc';
+  const store = typeof searchParams?.store === 'string' ? searchParams.store : undefined;
+
+  // Initiate search request
+  const offersPromise = searchProducts(query, category, sort);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -24,13 +30,13 @@ export default function SearchPage({
       </div>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <aside className="md:col-span-1">
-          <Suspense fallback={<FilterSidebar.Skeleton />}>
-            <FilterSidebarLoader />
+          <Suspense fallback={<FilterSidebarSkeleton />}>
+            <FilterSidebar retailers={stores} />
           </Suspense>
         </aside>
         <main className="md:col-span-3">
           <Suspense fallback={<SearchResultsSkeleton />}>
-            <SearchResults query={query} category={category} sort={sort} />
+            <SearchResults offersPromise={offersPromise} query={query} store={store} />
           </Suspense>
         </main>
       </div>
@@ -38,8 +44,14 @@ export default function SearchPage({
   );
 }
 
-async function SearchResults({ query, category, sort }: { query: string; category?: string; sort?: string }) {
-  const offers = await searchProducts(query, category, sort);
+async function SearchResults({ offersPromise, query, store }: { offersPromise: Promise<ProductOfferSearchResult[]>; query: string; store?: string }) {
+  let offers = await offersPromise;
+
+  // Apply store filter if present
+  if (store) {
+    const selectedStores = store.split(',');
+    offers = offers.filter(offer => selectedStores.includes(offer.store));
+  }
 
   return (
     <div>
@@ -66,10 +78,14 @@ async function SearchResults({ query, category, sort }: { query: string; categor
   );
 }
 
-async function FilterSidebarLoader() {
-  const categories = await getCategories();
-  const retailers = await getRetailers();
-  return <FilterSidebar categories={categories} retailers={retailers} />;
+async function FilterSidebarLoader({ offersPromise }: { offersPromise: Promise<ProductOfferSearchResult[]> }) {
+  // Para este ejemplo usaremos la lista estática que creaste
+  // en lugar de calcularla desde los resultados
+  // const offers = await offersPromise;
+  // const uniqueStores = Array.from(new Set(offers.map(offer => offer.store)));
+  // ... (código anterior comentado o eliminado)
+
+  return <FilterSidebar retailers={stores} />;
 }
 
 function SearchResultsSkeleton() {

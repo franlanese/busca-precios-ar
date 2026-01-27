@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/shared/icons';
 import ProductSearchBar from '@/components/product-search-bar';
+import Logo from "@/app/icon.png"
 
 const categories = [
   { name: 'Celulares', icon: Icons.smartphone, href: '/search?category=Celulares' },
@@ -14,7 +15,7 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4 py-12 md:py-24">
       <div className="flex flex-col items-center text-center">
-        <Icons.logo className="h-16 w-16 mb-4 text-primary" />
+        <img src={Logo.src} className="h-16 w-16 mb-4 text-primary" />
         <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-primary font-headline">
           Busca Precios
         </h1>
