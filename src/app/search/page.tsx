@@ -5,23 +5,48 @@ import FilterSidebar, { FilterSidebarSkeleton } from '@/components/search/filter
 import ProductCard from '@/components/search/product-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
-import type { ProductOfferSearchResult, Retailer } from '@/lib/types';
+import type { ProductCategory, ProductOfferSearchResult, Retailer } from '@/lib/types';
 import { stores } from '@/lib/stores';
+import { categories as allCategories} from '@/lib/data';
 
 export const revalidate = 0; // No caching for search results
 
-export default function SearchPage({
+export default async function SearchPage({
   searchParams,
 }: {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const query = typeof searchParams?.q === 'string' ? searchParams.q : '';
-  const category = typeof searchParams?.category === 'string' ? searchParams.category : undefined;
-  const sort = typeof searchParams?.sort === 'string' ? searchParams.sort : 'price-asc';
-  const store = typeof searchParams?.store === 'string' ? searchParams.store : undefined;
+    const params = await searchParams;
 
-  // Initiate search request
-  const offersPromise = searchProducts(query, category, sort);
+    console.log('RAW PARAMS: ', params)
+
+    const query =
+      typeof params.q === 'string' ? params.q : '';
+
+    const validCategories = allCategories.map(c => c.name) as ProductCategory[]
+    let selectedCategories: ProductCategory[] | undefined;
+
+    if (typeof params.category === 'string') {
+      selectedCategories = params.category.split(',')
+        .filter((c): c is ProductCategory => 
+          validCategories.includes(c as ProductCategory))
+      ;
+    } else if (Array.isArray(params.category)) {
+      selectedCategories = params.category
+        .filter((c): c is ProductCategory => 
+          validCategories.includes(c as ProductCategory)
+        )
+    }
+
+    const sort =
+      typeof params.sort === 'string' ? params.sort : 'price-asc';
+
+    const store =
+      typeof params.store === 'string' ? params.store : undefined;
+
+    console.log('q, categories:', query, selectedCategories);
+
+    const offersPromise = searchProducts(query, selectedCategories, sort);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -31,7 +56,7 @@ export default function SearchPage({
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <aside className="md:col-span-1">
           <Suspense fallback={<FilterSidebarSkeleton />}>
-            <FilterSidebar retailers={stores} />
+            <FilterSidebar retailers={stores} categories={allCategories.map(c => c.name)} />
           </Suspense>
         </aside>
         <main className="md:col-span-3">
@@ -76,16 +101,6 @@ async function SearchResults({ offersPromise, query, store }: { offersPromise: P
       )}
     </div>
   );
-}
-
-async function FilterSidebarLoader({ offersPromise }: { offersPromise: Promise<ProductOfferSearchResult[]> }) {
-  // Para este ejemplo usaremos la lista estática que creaste
-  // en lugar de calcularla desde los resultados
-  // const offers = await offersPromise;
-  // const uniqueStores = Array.from(new Set(offers.map(offer => offer.store)));
-  // ... (código anterior comentado o eliminado)
-
-  return <FilterSidebar retailers={stores} />;
 }
 
 function SearchResultsSkeleton() {

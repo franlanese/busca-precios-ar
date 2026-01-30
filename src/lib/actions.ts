@@ -1,29 +1,69 @@
 'use server';
 
-import { products, prices, retailers, priceHistories, categories as allCategories } from './data';
+import { products as localProducts, prices, retailers, priceHistories, categories as allCategories } from './data';
 import type { Product, Price, Retailer, PriceHistoryPoint, ProductCategory, ProductOfferSearchResult } from './types';
 
 export async function searchProducts(
   query: string,
-  categoryFilter?: ProductCategory | string,
+  categories?: ProductCategory[],
   sortOption: string = 'price-asc'
 ): Promise<ProductOfferSearchResult[]> {
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/search?q=${encodeURIComponent(query)}`)
+  const params = new URLSearchParams({
+    q: query
+  })
+
+  if (categories?.length) {
+    const normalized = categories.map(c => c.toLowerCase());
+    params.append('category', normalized.join(','))
+    console.log("ENTRA A CATEGORIES")
+  }
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/search?${params}`)
 
   if (!res.ok) {
+    const text = await res.text()
+    console.error('Search error: ', {
+      status: res.status,
+      statusText: res.statusText,
+      body: text,
+    })
+
     throw new Error('Error al buscar productos')
   }
 
-  let products = await res.json() as ProductOfferSearchResult[]
+  let searchResults = await res.json() as ProductOfferSearchResult[]
 
   if (sortOption === 'price-asc') {
-    products.sort((a, b) => a.price - b.price);
+    searchResults.sort((a, b) => a.price - b.price);
   } else if (sortOption === 'price-desc') {
-    products.sort((a, b) => b.price - a.price);
+    searchResults.sort((a, b) => b.price - a.price);
   } else if (sortOption === 'relevance') {
-    products.sort((a, b) => b.score - a.score);
+    searchResults.sort((a, b) => b.score - a.score);
   }
+
+  // Enrich with categories if not present
+  searchResults = searchResults.map(result => {
+    if (!result.category) {
+      // Find matching product in local data to get category
+      const matchedProduct = localProducts.find(p => p.id === result.id || p.name === result.title);
+      if (matchedProduct) {
+        return {
+          ...result,
+          category: matchedProduct.category
+        };
+      }
+    }
+    return result;
+  });
+
+  if (categories?.length) {
+    const normalizedCategories = categories.map(c => c.toLowerCase());
+    searchResults = searchResults.filter(result =>
+      result.category && normalizedCategories.includes(result.category.toLowerCase())
+    );
+  }
+
+  return searchResults;
 
   /*
   if (query) {
@@ -55,7 +95,6 @@ export async function searchProducts(
   });
   */
 
-  return products;
 }
 
 export interface ProductDetails {
@@ -68,7 +107,7 @@ export async function getProductDetails(slug: string): Promise<ProductDetails | 
   // Simulate network delay
   await new Promise((resolve) => setTimeout(resolve, 300));
 
-  const product = products.find((p) => p.slug === slug);
+  const product = localProducts.find((p) => p.slug === slug);
 
   if (!product) {
     return null;

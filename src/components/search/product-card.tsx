@@ -11,7 +11,6 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ offer }: ProductCardProps) {
-  console.log("offer: ", offer)
   return (
     <Card className="flex flex-col overflow-hidden h-full transition-shadow duration-300 hover:shadow-primary/20 hover:shadow-lg">
       <CardHeader className="p-0">

@@ -1,4 +1,4 @@
-export type ProductCategory = 'Celulares' | 'Televisores' | 'Consolas' | 'Audio';
+export type ProductCategory = 'celulares' | 'televisores' | 'consolas' | 'notebook' | 'accesorios';
 
 export interface Retailer {
   id: string;
@@ -38,4 +38,5 @@ export interface ProductOfferSearchResult {
   image: string;
   url: string;
   score: number;
+  category?: string;
 }

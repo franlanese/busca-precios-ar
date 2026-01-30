@@ -8,13 +8,13 @@ export const retailers: Retailer[] = [
 ];
 
 export const products: Product[] = [
-  { id: '1', slug: 'samsung-galaxy-s23', name: 'Samsung Galaxy S23', category: 'Celulares', imageUrl: 'https://picsum.photos/seed/smartphone1/600/600', imageHint: 'smartphone device' },
-  { id: '2', slug: 'sony-bravia-55', name: 'Sony Bravia 55" 4K', category: 'Televisores', imageUrl: 'https://picsum.photos/seed/tv1/800/600', imageHint: 'television living room' },
-  { id: '3', slug: 'playstation-5', name: 'PlayStation 5', category: 'Consolas', imageUrl: 'https://picsum.photos/seed/console1/600/400', imageHint: 'game console' },
-  { id: '4', slug: 'iphone-15', name: 'iPhone 15 Pro', category: 'Celulares', imageUrl: 'https://picsum.photos/seed/smartphone2/600/600', imageHint: 'iphone alternative' },
-  { id: '5', slug: 'lg-oled-65', name: 'LG OLED 65" Evo C3', category: 'Televisores', imageUrl: 'https://picsum.photos/seed/tv2/800/600', imageHint: 'oled tv' },
-  { id: '6', slug: 'xbox-series-x', name: 'Xbox Series X', category: 'Consolas', imageUrl: 'https://picsum.photos/seed/console2/600/400', imageHint: 'xbox console' },
-  { id: '7', slug: 'sony-wh-1000xm5', name: 'Sony WH-1000XM5', category: 'Audio', imageUrl: 'https://picsum.photos/seed/headphones1/600/600', imageHint: 'wireless headphones' },
+  { id: '1', slug: 'samsung-galaxy-s23', name: 'Samsung Galaxy S23', category: 'celulares', imageUrl: 'https://picsum.photos/seed/smartphone1/600/600', imageHint: 'smartphone device' },
+  { id: '2', slug: 'sony-bravia-55', name: 'Sony Bravia 55" 4K', category: 'televisores', imageUrl: 'https://picsum.photos/seed/tv1/800/600', imageHint: 'television living room' },
+  { id: '3', slug: 'playstation-5', name: 'PlayStation 5', category: 'consolas', imageUrl: 'https://picsum.photos/seed/console1/600/400', imageHint: 'game console' },
+  { id: '4', slug: 'iphone-15', name: 'iPhone 15 Pro', category: 'celulares', imageUrl: 'https://picsum.photos/seed/smartphone2/600/600', imageHint: 'iphone alternative' },
+  { id: '5', slug: 'lg-oled-65', name: 'LG OLED 65" Evo C3', category: 'televisores', imageUrl: 'https://picsum.photos/seed/tv2/800/600', imageHint: 'oled tv' },
+  { id: '6', slug: 'xbox-series-x', name: 'Xbox Series X', category: 'consolas', imageUrl: 'https://picsum.photos/seed/console2/600/400', imageHint: 'xbox console' },
+  { id: '7', slug: 'sony-wh-1000xm5', name: 'Sony WH-1000XM5', category: 'accesorios', imageUrl: 'https://picsum.photos/seed/headphones1/600/600', imageHint: 'wireless headphones' },
 ];
 
 export const prices: Price[] = [
@@ -37,7 +37,7 @@ export const prices: Price[] = [
   // Xbox Series X
   { productId: '6', retailerId: 'mercadolibre', price: 990000, url: '#', lastUpdated: '2023-10-27T10:00:00Z' },
   { productId: '6', retailerId: 'cetrogar', price: 1020000, url: '#', lastUpdated: '2023-10-27T09:00:00Z' },
-   // Sony WH-1000XM5
+  // Sony WH-1000XM5
   { productId: '7', retailerId: 'mercadolibre', price: 450000, url: '#', lastUpdated: '2023-10-27T10:00:00Z' },
   { productId: '7', retailerId: 'musimundo', price: 465000, url: '#', lastUpdated: '2023-10-27T09:00:00Z' },
 ];
@@ -74,8 +74,9 @@ export const priceHistories: Record<string, PriceHistoryPoint[]> = {
 };
 
 export const categories: { name: ProductCategory, slug: string }[] = [
-    { name: 'Celulares', slug: 'celulares' },
-    { name: 'Televisores', slug: 'televisores' },
-    { name: 'Consolas', slug: 'consolas' },
-    { name: 'Audio', slug: 'audio' },
+  { name: 'celulares', slug: 'celulares' },
+  { name: 'televisores', slug: 'televisores' },
+  { name: 'consolas', slug: 'consolas' },
+  { name: 'notebook', slug: 'notebooks' },
+  { name: 'accesorios', slug: 'accesorios' }
 ];
