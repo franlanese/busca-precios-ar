@@ -16,7 +16,6 @@ export async function searchProducts(
   if (categories?.length) {
     const normalized = categories.map(c => c.toLowerCase());
     params.append('category', normalized.join(','))
-    console.log("ENTRA A CATEGORIES")
   }
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/search?${params}`)
 

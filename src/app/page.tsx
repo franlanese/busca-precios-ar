@@ -3,13 +3,24 @@ import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/shared/icons';
 import ProductSearchBar from '@/components/product-search-bar';
 import Logo from "@/app/icon.png"
+import { categories as sharedCategories } from '@/lib/data';
+import { ProductCategory } from '@/lib/types';
+import { LucideIcon } from 'lucide-react';
 
-const categories = [
-  { name: 'Celulares', icon: Icons.smartphone, href: '/search?category=Celulares' },
-  { name: 'Televisores', icon: Icons.tv, href: '/search?category=Televisores' },
-  { name: 'Consolas', icon: Icons.console, href: '/search?category=Consolas' },
-  { name: 'Audio', icon: Icons.audio, href: '/search?category=Audio' },
-];
+const categoryIcons: Record<ProductCategory, LucideIcon> = {
+  celulares: Icons.smartphone,
+  televisores: Icons.tv,
+  consolas: Icons.console,
+  notebook: Icons.logo, // Fallback icon, maybe add Laptop icon later
+  accesorios: Icons.audio,
+};
+
+const categories = sharedCategories.map((cat) => ({
+  name: cat.name.charAt(0).toUpperCase() + cat.name.slice(1),
+  slug: cat.slug,
+  icon: categoryIcons[cat.name as ProductCategory] || Icons.search,
+  href: `/search?category=${cat.slug}`,
+}));
 
 export default function Home() {
   return (

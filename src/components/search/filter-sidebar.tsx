@@ -16,6 +16,11 @@ interface FilterSidebarProps {
   categories: string[];
 }
 
+const capitalize = (s: string) => {
+  if (!s) return s;
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
 export default function FilterSidebar({ retailers, categories }: FilterSidebarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -126,7 +131,7 @@ export default function FilterSidebar({ retailers, categories }: FilterSidebarPr
                     onCheckedChange={() => handleFilterChange('category', category.toLowerCase())}
                   />
                   <Label htmlFor={`cat-${category}`} className="font-normal cursor-pointer">
-                    {category}
+                    {capitalize(category)}
                   </Label>
                 </div>
               ))}
@@ -166,9 +171,11 @@ export default function FilterSidebar({ retailers, categories }: FilterSidebarPr
           Aplicar filtros
         </Button>
 
+        {/*
         <Button variant="outline" className="w-full" onClick={() => router.push('/search')}>
           Limpiar filtros
         </Button>
+        */}
       </div>
     </div>
   );
