@@ -77,6 +77,5 @@ export const categories: { name: ProductCategory, slug: string }[] = [
   { name: 'celulares', slug: 'celulares' },
   { name: 'televisores', slug: 'televisores' },
   { name: 'consolas', slug: 'consolas' },
-  { name: 'notebook', slug: 'notebooks' },
-  { name: 'accesorios', slug: 'accesorios' }
+  { name: 'notebooks', slug: 'notebooks' }
 ];

@@ -6,11 +6,13 @@ import type { Product, Price, Retailer, PriceHistoryPoint, ProductCategory, Prod
 export async function searchProducts(
   query: string,
   categories?: ProductCategory[],
-  sortOption: string = 'price-asc'
+  sortOption: string = 'price-asc',
+  page: number = 1
 ): Promise<ProductOfferSearchResult[]> {
 
   const params = new URLSearchParams({
-    q: query
+    q: query,
+    page: page.toString()
   })
 
   if (categories?.length) {

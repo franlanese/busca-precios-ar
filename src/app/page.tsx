@@ -11,8 +11,7 @@ const categoryIcons: Record<ProductCategory, LucideIcon> = {
   celulares: Icons.smartphone,
   televisores: Icons.tv,
   consolas: Icons.console,
-  notebook: Icons.logo, // Fallback icon, maybe add Laptop icon later
-  accesorios: Icons.audio,
+  notebooks: Icons.laptop // Fallback icon, maybe add Laptop icon later
 };
 
 const categories = sharedCategories.map((cat) => ({
@@ -26,18 +25,21 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4 py-12 md:py-24">
       <div className="flex flex-col items-center text-center">
-        <img src={Logo.src} className="h-16 w-16 mb-4 text-primary" />
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-primary font-headline">
+        <img 
+          src={Logo.src} 
+          className="h-16 w-16 mb-4 text-primary animate-in fade-in slide-in-from-bottom-8 duration-1000" 
+        />
+        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-primary font-headline animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150">
           Busca Precios
         </h1>
-        <p className="mt-4 max-w-2xl text-lg md:text-xl text-muted-foreground">
+        <p className="mt-4 max-w-2xl text-lg md:text-xl text-muted-foreground animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
           Tu metabuscador de electrodomésticos en Argentina. Encontrá el mejor
           precio, siempre.
         </p>
-        <div className="mt-8 w-full max-w-2xl">
+        <div className="mt-8 w-full max-w-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
           <ProductSearchBar />
         </div>
-        <div className="mt-10">
+        <div className="mt-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-700">
           <p className="text-sm font-medium text-muted-foreground mb-4">
             O explorá por categoría:
           </p>

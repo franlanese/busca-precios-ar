@@ -16,6 +16,7 @@ import {
   Star,
   DollarSign,
   TrendingUp,
+  Laptop,
 } from 'lucide-react';
 
 export const Icons = {
@@ -36,4 +37,5 @@ export const Icons = {
   star: Star,
   dollar: DollarSign,
   trendingUp: TrendingUp,
+  laptop: Laptop,
 };

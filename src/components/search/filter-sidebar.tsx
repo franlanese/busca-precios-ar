@@ -41,6 +41,12 @@ export default function FilterSidebar({ retailers, categories }: FilterSidebarPr
     setSelectedCategories(searchParams.get('category')?.split(',') || []);
   }, [searchParams]);
 
+  // Sync state with SearchBar so searches can include unapplied filters
+  useEffect(() => {
+    const detail = { sort, selectedStores, selectedCategories };
+    window.dispatchEvent(new CustomEvent('pending-filters-changed', { detail }));
+  }, [sort, selectedStores, selectedCategories]);
+
   const hasChanges = () => {
     const currentSort = searchParams.get('sort') || 'price-asc';
     const currentStores = searchParams.get('store')?.split(',') || [];
