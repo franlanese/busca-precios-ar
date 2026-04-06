@@ -21,6 +21,8 @@ const capitalize = (s: string) => {
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
+import { SlidersHorizontal, ChevronDown } from 'lucide-react';
+
 export default function FilterSidebar({ retailers, categories }: FilterSidebarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -33,6 +35,7 @@ export default function FilterSidebar({ retailers, categories }: FilterSidebarPr
   const [sort, setSort] = useState(initialSort);
   const [selectedStores, setSelectedStores] = useState<string[]>(initialStores);
   const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategories);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   // Sync with URL if it changes externally (e.g. back button)
   useEffect(() => {
@@ -106,82 +109,104 @@ export default function FilterSidebar({ retailers, categories }: FilterSidebarPr
     const query = search ? `?${search}` : '';
 
     router.push(`/search${query}`);
+    setIsMobileOpen(false); // Cierra en móviles luego de aplicar
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Ordenar por</h3>
-        <Select value={sort} onValueChange={(value) => handleFilterChange('sort', value)}>
-          <SelectTrigger>
-            <SelectValue placeholder="Seleccionar orden" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="relevance">Relevancia</SelectItem>
-            <SelectItem value="price-asc">Precio: Menor a Mayor</SelectItem>
-            <SelectItem value="price-desc">Precio: Mayor a Menor</SelectItem>
-          </SelectContent>
-        </Select>
+    <div className="space-y-4">
+      <div className="md:hidden">
+        <Button
+          className={`w-full flex items-center justify-between transition-all ${isMobileOpen
+              ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/20'
+              : 'bg-black text-white hover:bg-neutral-900 active:bg-primary active:text-primary-foreground'
+            }`}
+          onClick={() => setIsMobileOpen(!isMobileOpen)}
+        >
+          <span className="flex items-center gap-2">
+            <SlidersHorizontal size={16} />
+            Filtros
+          </span>
+          <ChevronDown
+            size={16}
+            className={`transition-transform duration-200 ${isMobileOpen ? 'rotate-180' : ''}`}
+          />
+        </Button>
       </div>
 
-      <Accordion type="multiple" defaultValue={['retailer', 'category']} className="w-full">
-        <AccordionItem value="category">
-          <AccordionTrigger className="text-lg font-semibold">Categoría</AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-3">
-              {categories.map((category) => (
-                <div key={category} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`cat-${category}`}
-                    checked={selectedCategories.includes(category.toLowerCase())} // URL is usually lowercase
-                    onCheckedChange={() => handleFilterChange('category', category.toLowerCase())}
-                  />
-                  <Label htmlFor={`cat-${category}`} className="font-normal cursor-pointer">
-                    {capitalize(category)}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="retailer">
-          <AccordionTrigger className="text-lg font-semibold">Tienda</AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-3">
-              {retailers.map((retailer) => (
-                <div key={retailer.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`ret-${retailer.id}`}
-                    checked={selectedStores.includes(retailer.name)}
-                    onCheckedChange={() => handleFilterChange('retailer', retailer.name)}
-                  />
-                  <Label htmlFor={`ret-${retailer.id}`} className="font-normal cursor-pointer">
-                    {retailer.name}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+      <div className={`space-y-6 ${isMobileOpen ? 'block' : 'hidden'} md:block`}>
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Ordenar por</h3>
+          <Select value={sort} onValueChange={(value) => handleFilterChange('sort', value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Seleccionar orden" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="relevance">Relevancia</SelectItem>
+              <SelectItem value="price-asc">Precio: Menor a Mayor</SelectItem>
+              <SelectItem value="price-desc">Precio: Mayor a Menor</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-      <div className="space-y-2">
-        <Button
-          className={`w-full text-white transition-opacity duration-200 ${hasChanges()
-            ? 'bg-green-600 hover:bg-green-700 opacity-100'
-            : 'bg-green-600 opacity-50 cursor-not-allowed'
-            }`}
-          onClick={applyFilters}
-          disabled={!hasChanges()}
-        >
-          Aplicar filtros
-        </Button>
+        <Accordion type="multiple" defaultValue={['retailer', 'category']} className="w-full">
+          <AccordionItem value="category">
+            <AccordionTrigger className="text-lg font-semibold">Categoría</AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-3">
+                {categories.map((category) => (
+                  <div key={category} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`cat-${category}`}
+                      checked={selectedCategories.includes(category.toLowerCase())} // URL is usually lowercase
+                      onCheckedChange={() => handleFilterChange('category', category.toLowerCase())}
+                    />
+                    <Label htmlFor={`cat-${category}`} className="font-normal cursor-pointer">
+                      {capitalize(category)}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="retailer">
+            <AccordionTrigger className="text-lg font-semibold">Tienda</AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-3">
+                {retailers.map((retailer) => (
+                  <div key={retailer.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`ret-${retailer.id}`}
+                      checked={selectedStores.includes(retailer.name)}
+                      onCheckedChange={() => handleFilterChange('retailer', retailer.name)}
+                    />
+                    <Label htmlFor={`ret-${retailer.id}`} className="font-normal cursor-pointer">
+                      {retailer.name}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
-        {/*
-        <Button variant="outline" className="w-full" onClick={() => router.push('/search')}>
-          Limpiar filtros
-        </Button>
-        */}
+        <div className="space-y-2">
+          <Button
+            className={`w-full transition-opacity duration-200 bg-primary text-primary-foreground hover:bg-primary/90 ${hasChanges()
+              ? 'opacity-100'
+              : 'opacity-50 cursor-not-allowed'
+              }`}
+            onClick={applyFilters}
+            disabled={!hasChanges()}
+          >
+            Aplicar filtros
+          </Button>
+
+          {/*
+          <Button variant="outline" className="w-full" onClick={() => router.push('/search')}>
+            Limpiar filtros
+          </Button>
+          */}
+        </div>
       </div>
     </div>
   );
