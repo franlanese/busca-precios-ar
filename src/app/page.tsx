@@ -27,19 +27,19 @@ export default function Home() {
       <div className="flex flex-col items-center text-center">
         <img 
           src={Logo.src} 
-          className="h-16 w-16 mb-4 text-primary animate-in fade-in slide-in-from-bottom-8 duration-1000" 
+          className="h-16 w-16 mb-4 text-primary animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both" 
         />
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-primary font-headline animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150">
+        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-primary font-headline animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both">
           Busca Precios
         </h1>
-        <p className="mt-4 max-w-2xl text-lg md:text-xl text-muted-foreground animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+        <p className="mt-4 max-w-2xl text-lg md:text-xl text-muted-foreground animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 fill-mode-both">
           Tu metabuscador de electrodomésticos en Argentina. Encontrá el mejor
           precio, siempre.
         </p>
-        <div className="mt-8 w-full max-w-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
-          <ProductSearchBar />
+        <div className="mt-8 w-full max-w-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 fill-mode-both">
+          <ProductSearchBar typingEffect={true} />
         </div>
-        <div className="mt-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-700">
+        <div className="mt-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-700 fill-mode-both">
           <p className="text-sm font-medium text-muted-foreground mb-4">
             O explorá por categoría:
           </p>

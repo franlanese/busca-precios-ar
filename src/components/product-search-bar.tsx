@@ -8,13 +8,55 @@ import { Icons } from '@/components/shared/icons';
 
 function SearchBarContent({
   initialQuery = '',
+  typingEffect = false,
 }: {
   initialQuery?: string;
+  typingEffect?: boolean;
 }) {
   const [query, setQuery] = useState(initialQuery);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const pendingFiltersRef = useRef<{sort: string, selectedStores: string[], selectedCategories: string[]} | null>(null);
+  const pendingFiltersRef = useRef<{ sort: string, selectedStores: string[], selectedCategories: string[] } | null>(null);
+
+  let fullPlaceholder = "Buscar celulares, televisores, consolas..."
+  const [placeholder, setPlaceholder] = useState(typingEffect ? "|" : fullPlaceholder);
+
+  useEffect(() => {
+    if (!typingEffect) return;
+
+    const startDelay = 1500;
+    const typingSpeed = 75;
+
+    let timeout: NodeJS.Timeout;
+    let isBlinking = true;
+
+    // Start blinking cursor
+    const blinkInterval = setInterval(() => {
+      if (isBlinking) {
+        setPlaceholder((prev) => (prev.endsWith("|") ? prev.slice(0, -1) : prev + "|"));
+      }
+    }, 500);
+
+    const typeChar = (i: number) => {
+      isBlinking = false; // pause blinking while typing
+      const currentText = fullPlaceholder.substring(0, i + 1);
+      setPlaceholder(currentText + "|");
+
+      if (i + 1 < fullPlaceholder.length) {
+        timeout = setTimeout(() => typeChar(i + 1), typingSpeed);
+      } else {
+        // resume blinking at the end
+        isBlinking = true;
+      }
+    };
+
+    timeout = setTimeout(() => typeChar(0), startDelay);
+
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(blinkInterval);
+    };
+  }, [typingEffect]);
 
   useEffect(() => {
     setQuery(initialQuery);
@@ -28,23 +70,31 @@ function SearchBarContent({
     return () => window.removeEventListener('pending-filters-changed', handleFilters as EventListener);
   }, []);
 
+  useEffect(() => {
+    if (window.innerWidth <= 508) {
+      fullPlaceholder = "Celulares, Notebooks..."
+    } else {
+      fullPlaceholder = "Buscar celulares, televisores, consolas..."
+    }
+  }, [window.innerWidth])
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams(searchParams.toString());
-    
+
     if (pendingFiltersRef.current) {
       const { sort, selectedStores, selectedCategories } = pendingFiltersRef.current;
-      
+
       if (sort && sort !== 'price-asc') params.set('sort', sort);
       else params.delete('sort');
-      
+
       if (selectedStores && selectedStores.length > 0) params.set('store', selectedStores.join(','));
       else params.delete('store');
-      
+
       if (selectedCategories && selectedCategories.length > 0) params.set('category', selectedCategories.join(','));
       else params.delete('category');
     }
-    
+
     if (query.trim()) {
       params.set('q', query.trim());
       router.push(`/search?${params.toString()}`);
@@ -55,7 +105,7 @@ function SearchBarContent({
       if (params.has('category')) {
         router.push(`/search?${params.toString()}`);
       }
-    } 
+    }
   };
 
   return (
@@ -64,7 +114,7 @@ function SearchBarContent({
         <Icons.search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input
           type="search"
-          placeholder="Buscar celulares, televisores, consolas..."
+          placeholder={placeholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="pl-10 h-12 text-base"
@@ -78,7 +128,7 @@ function SearchBarContent({
   );
 }
 
-export default function ProductSearchBar(props: { initialQuery?: string }) {
+export default function ProductSearchBar(props: { initialQuery?: string, typingEffect?: boolean }) {
   return (
     <Suspense fallback={
       <div className="flex w-full items-center space-x-2">
