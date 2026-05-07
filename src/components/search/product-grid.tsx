@@ -6,7 +6,7 @@ import ProductCard from '@/components/search/product-card';
 import { Button } from '@/components/ui/button';
 import { searchProducts } from '@/lib/actions';
 import { Loader2 } from 'lucide-react';
-import type { ProductOfferSearchResult, ProductCategory } from '@/lib/types';
+import type { ProductOfferSearchResult, ProductCategory, ProductStore } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
 
 interface ProductGridProps {
@@ -14,7 +14,7 @@ interface ProductGridProps {
     query: string;
     categories?: ProductCategory[];
     sort: string;
-    store?: string;
+    stores?: ProductStore[];
     totalInitialCount: number; // Added to maybe show total count? Though API doesn't seem to return total count easily yet.
 }
 
@@ -23,7 +23,7 @@ export default function ProductGrid({
     query,
     categories,
     sort,
-    store
+    stores
 }: ProductGridProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -38,13 +38,12 @@ export default function ProductGrid({
         const nextPage = page + 1;
 
         try {
-            let newOffers = await searchProducts(query, categories, sort, nextPage);
+            let newOffers = await searchProducts(query, categories, stores, sort, nextPage);
 
             // Client-side store filtering if needed (to match server-side behavior for initial load)
             // Ideally API handles this, but based on current implementation in page.tsx:
-            if (store) {
-                const selectedStores = store.split(',');
-                newOffers = newOffers.filter(offer => selectedStores.includes(offer.store));
+            if (stores && stores.length > 0) {
+                newOffers = newOffers.filter(offer => stores.includes(offer.store as ProductStore));
             }
 
             if (newOffers.length === 0) {
@@ -88,7 +87,7 @@ export default function ProductGrid({
 
             {offers.length > 0 ? (
                 <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {offers.map((offer) => (
                             <ProductCard key={offer.id} offer={offer} />
                         ))}

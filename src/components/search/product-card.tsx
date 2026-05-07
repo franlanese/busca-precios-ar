@@ -5,14 +5,20 @@ import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/utils';
 import type { ProductOfferSearchResult } from '@/lib/types';
 import { Skeleton } from '../ui/skeleton';
+import { capitalize, cn } from '@/lib/utils';
 
 interface ProductCardProps {
   offer: ProductOfferSearchResult;
 }
 
 export default function ProductCard({ offer }: ProductCardProps) {
+  const isAvailable = offer.available !== false;
+
   return (
-    <Card className="flex flex-col overflow-hidden h-full transition-shadow duration-300 hover:shadow-primary/20 hover:shadow-lg">
+    <Card className={cn(
+      "flex flex-col overflow-hidden h-full transition-shadow duration-300",
+      isAvailable ? "hover:shadow-primary/20 hover:shadow-lg" : "opacity-60 grayscale"
+    )}>
       <CardHeader className="p-0">
         <div className="block aspect-square relative">
           <img
@@ -23,7 +29,7 @@ export default function ProductCard({ offer }: ProductCardProps) {
           //data-ai-hint={offer.imageHint}
           />
           <div className="absolute top-2 right-2 bg-black/80 backdrop-blur-sm px-2 py-1 rounded text-xs font-semibold shadow-sm text-white">
-            {offer.store}
+            {capitalize(offer.store)}
           </div>
         </div>
       </CardHeader>
@@ -42,13 +48,17 @@ export default function ProductCard({ offer }: ProductCardProps) {
                 <Image src={offer.retailerLogo} alt={offer.retailerName} fill className="object-contain object-right" />
               </div>
             ) : (
-              <span className="text-sm font-medium">{offer.store}</span>
+              <span className="text-sm font-medium">{capitalize(offer.store)}</span>
             )}
           </div>
           <p className="text-2xl font-bold text-primary">{formatCurrency(offer.price)}</p>
         </div>
-        <Button asChild className="w-full mt-2">
-          <a href={offer.url} target="_blank" rel="noopener noreferrer">Ver oferta</a>
+        <Button asChild={isAvailable} disabled={!isAvailable} variant={isAvailable ? "default" : "secondary"} className="w-full mt-2">
+          {isAvailable ? (
+            <a href={offer.url} target="_blank" rel="noopener noreferrer">Ver oferta</a>
+          ) : (
+            <span>No disponible</span>
+          )}
         </Button>
       </CardFooter>
     </Card>

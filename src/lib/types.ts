@@ -1,4 +1,5 @@
 export type ProductCategory = 'celulares' | 'televisores' | 'consolas' | 'notebooks';
+export type ProductStore = 'Cetrogar' | 'On City' | 'Novogar'
 
 export interface Retailer {
   id: string;
@@ -39,4 +40,5 @@ export interface ProductOfferSearchResult {
   url: string;
   score: number;
   category?: string;
+  available?: boolean;
 }

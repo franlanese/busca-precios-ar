@@ -1,11 +1,12 @@
 'use server';
 
 import { products as localProducts, prices, retailers, priceHistories, categories as allCategories } from './data';
-import type { Product, Price, Retailer, PriceHistoryPoint, ProductCategory, ProductOfferSearchResult } from './types';
+import type { Product, Price, Retailer, PriceHistoryPoint, ProductCategory, ProductOfferSearchResult, ProductStore } from './types';
 
 export async function searchProducts(
   query: string,
   categories?: ProductCategory[],
+  stores?: ProductStore[],
   sortOption: string = 'price-asc',
   page: number = 1
 ): Promise<ProductOfferSearchResult[]> {
@@ -19,6 +20,12 @@ export async function searchProducts(
     const normalized = categories.map(c => c.toLowerCase());
     params.append('category', normalized.join(','))
   }
+
+  if (stores?.length) {
+    const normalized = stores.map(c => c.toLowerCase())
+    params.append('store', normalized.join(','))
+  }
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/search?${params}`)
 
   if (!res.ok) {
@@ -33,6 +40,7 @@ export async function searchProducts(
   }
 
   let searchResults = await res.json() as ProductOfferSearchResult[]
+  console.log("RES SEARCH: ", searchResults)
 
   if (sortOption === 'price-asc') {
     searchResults.sort((a, b) => a.price - b.price);

@@ -29,7 +29,7 @@ export default function Home() {
           src={Logo.src} 
           className="h-16 w-16 mb-4 text-primary animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both" 
         />
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-primary font-headline animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both">
+        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-primary font-headline animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both">
           Busca Precios
         </h1>
         <p className="mt-4 max-w-2xl text-lg md:text-xl text-muted-foreground animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 fill-mode-both">

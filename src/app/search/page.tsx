@@ -1,13 +1,15 @@
 import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
 import ProductSearchBar from '@/components/product-search-bar';
 import { searchProducts } from '@/lib/actions';
 import FilterSidebar, { FilterSidebarSkeleton } from '@/components/search/filter-sidebar';
 import ProductCard from '@/components/search/product-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
-import type { ProductCategory, ProductOfferSearchResult, Retailer } from '@/lib/types';
+import type { ProductCategory, ProductOfferSearchResult, ProductStore, Retailer } from '@/lib/types';
 import { stores } from '@/lib/stores';
 import { categories as allCategories } from '@/lib/data';
+import { stores as allStores } from '@/lib/data';
 import ProductGrid from '@/components/search/product-grid';
 
 export const revalidate = 0; // No caching for search results
@@ -25,7 +27,10 @@ export default async function SearchPage({
     typeof params.q === 'string' ? params.q : '';
 
   const validCategories = allCategories.map(c => c.name) as ProductCategory[]
+  const validStores = allStores.map(s => s.name) as ProductStore[]
+
   let selectedCategories: ProductCategory[] | undefined;
+  let selectedStores: ProductStore[] | undefined;
 
   if (typeof params.category === 'string') {
     selectedCategories = params.category.split(',')
@@ -39,6 +44,18 @@ export default async function SearchPage({
       )
   }
 
+  if (typeof params.store === 'string') {
+    selectedStores = params.store.split(',')
+      .filter((c): c is ProductStore =>
+        validStores.includes(c as ProductStore))
+      ;
+  } else if (Array.isArray(params.store)) {
+    selectedStores = params.store
+      .filter((c): c is ProductStore =>
+        validStores.includes(c as ProductStore)
+      )
+  }
+
   const sort =
     typeof params.sort === 'string' ? params.sort : 'price-asc';
 
@@ -47,9 +64,13 @@ export default async function SearchPage({
 
   console.log('q, categories:', query, selectedCategories);
 
+  if (!query && (!selectedCategories || selectedCategories.length === 0) && (!selectedStores || selectedStores.length === 0)) {
+    redirect('/');
+  }
+
   const searchKey = `${query}-${selectedCategories?.join(',') || ''}-${sort}-${store}`
 
-  const offersPromise = searchProducts(query, selectedCategories, sort);
+  const offersPromise = searchProducts(query, selectedCategories, selectedStores, sort);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -67,7 +88,7 @@ export default async function SearchPage({
             <SearchResults
               offersPromise={offersPromise}
               query={query}
-              store={store}
+              stores={selectedStores}
               categories={selectedCategories}
               sort={sort}
             />
@@ -78,14 +99,8 @@ export default async function SearchPage({
   );
 }
 
-async function SearchResults({ offersPromise, query, store, categories, sort }: { offersPromise: Promise<ProductOfferSearchResult[]>; query: string; store?: string; categories?: ProductCategory[]; sort: string }) {
+async function SearchResults({ offersPromise, query, stores, categories, sort }: { offersPromise: Promise<ProductOfferSearchResult[]>; query: string; stores?: ProductStore[]; categories?: ProductCategory[]; sort: string }) {
   let offers = await offersPromise;
-
-  // Apply store filter if present
-  if (store) {
-    const selectedStores = store.split(',');
-    offers = offers.filter(offer => selectedStores.includes(offer.store));
-  }
 
   return (
     <ProductGrid
@@ -93,7 +108,7 @@ async function SearchResults({ offersPromise, query, store, categories, sort }: 
       query={query}
       categories={categories}
       sort={sort}
-      store={store}
+      stores={stores}
       totalInitialCount={offers.length}
     />
   );

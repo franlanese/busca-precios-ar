@@ -1,4 +1,4 @@
-import type { Product, Retailer, Price, PriceHistoryPoint, ProductCategory } from './types';
+import type { Product, Retailer, Price, PriceHistoryPoint, ProductCategory, ProductStore } from './types';
 
 export const retailers: Retailer[] = [
   { id: 'mercadolibre', name: 'Mercado Libre', logoUrl: '/retailers/mercadolibre.svg' },
@@ -78,4 +78,10 @@ export const categories: { name: ProductCategory, slug: string }[] = [
   { name: 'televisores', slug: 'televisores' },
   { name: 'consolas', slug: 'consolas' },
   { name: 'notebooks', slug: 'notebooks' }
+];
+
+export const stores: { name: ProductStore, slug: string }[] = [
+  { name: 'Cetrogar', slug: 'cetrogar' },
+  { name: 'On City', slug: 'On City' },
+  { name: 'Novogar', slug: 'Novogar' },
 ];
